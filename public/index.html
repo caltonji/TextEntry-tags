@@ -2,56 +2,48 @@
 <!doctype html>
 
 <!-- ASSIGN OUR ANGULAR MODULE -->
-<html ng-app="writer">
+<html ng-app="notes">
 <head>
     <!-- META -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
 
-    <title>Chain Writer</title>
+    <title>Text Entry with Tags Enforced</title>
 
     <!-- SCROLLS -->
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
-    <link rel="stylesheet" type="text/css" href="core.css">
+    <link rel="stylesheet" type="text/css" href="style/main.css">
 
     <!-- SPELLS -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script><!-- load angular -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-cookies.js"></script>
     <script src="core.js"></script>
-
-    <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-70233846-2', 'auto');
-  ga('send', 'pageview');
-
-</script>
 
 </head>
 <!-- SET THE CONTROLLER -->
 <body ng-controller="mainController">
     <div class="container">
-
-        <div id="thoughts" class="thoughts">
-            <div class="thought" ng-repeat="thought in thoughts">
-                <div class="row">
-                    <div class="card">
-                        <div class="content">{{ thought.message }}</div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="chain"></div>
-                </div>
+        <div class="half left">
+            <div class="tag-header-container">
+                <span class="tag-header">{{currentTag}}</span>
             </div>
-            <div class="newThought">
-                <div class="card">
-                    <div contenteditable="true" class="plainTextArea" placeholder="Type a thought and press enter...">{{ currentThought }}</div>
-                </div>
+            <div class="note-card-container">
+                <div class="note-card" ng-repeat="note in tagsToNotes[currentTag] track by $index">{{note}}</div>
             </div>
         </div>
+        <div class="half right">
+            <ul class ="tags">
+                <li class="tag" ng-class="{'selected': tag==currentTag && !newTagFocus}" ng-repeat="tag in tags" ng-click="setCurrentTag($index)">
+                    <span class="tag-title">{{tag}}</span>
+                </li>
+                <li class="tag new-tag" ng-class="{'selected': newTagFocus}" ng-click="newTag()">
+                    <form ng-submit="submitTag($event)"><input type="text" ng-model="currentNewTag" size="{{currentNewTagInputSize()}}" class="new-tag tag-title" placeholder="{{newTagPlaceholder}}" ng-focus="newTagFocus=true" ng-blur="newTagFocus=false" ng-trim="false"></form>
+                </li>
+            </ul>
+            <textarea class="new-note" placeholder="{{textareaPlaceholder}}" ng-model="currentNote"></textarea>
+            <div class="submit-note" ng-class="{'enabled': submitNoteEnabled}" ng-click="submitNote()">{{submitNoteText}}</div>
+        </div>
     </div>
+
 </body>
 </html>
