@@ -18,8 +18,17 @@
             $cookies.put('notes-tagsToNotes', null);
         }
         // $scope.clearDatabase();
-        var tagsFromStore = JSON.parse($cookies.get('notes-tags'));
-        var tagsToNotesFromStore = JSON.parse($cookies.get('notes-tagsToNotes'));
+        // get the data from store if it's there
+        var tagsFromStore;
+        var tagsToNotesFromStore;
+        var tagsObj = $cookies.get('notes-tags');
+        if (tagsObj) {
+            tagsFromStore = JSON.parse(tagsObj);
+        }
+        var tagsToNotesObj = $cookies.get('notes-tagsToNotes');
+        if (tagsToNotesObj) {
+            tagsToNotesFromStore = JSON.parse(tagsToNotesObj);
+        }
         $scope.tags = tagsFromStore || [];
         $scope.tagsToNotes = tagsToNotesFromStore || {};
 
@@ -27,7 +36,6 @@
         $scope.textareaPlaceholder = "Type a new idea... or an old one...";
         $scope.currentTag = $scope.tags[0];
         $scope.currentNote = "";
-        
 
         $scope.submitNoteText = "Add a tag to get started"
         $scope.submitNoteEnabled = false;
